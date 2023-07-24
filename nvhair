@@ -1,0 +1,95 @@
+#!/bin/bash
+
+searchres(){
+nv.awk -v sstr="$zh" "$cedict" | \
+	awk -v charsize=20 -v pysize=12 '
+	function tmark(rom,tone)
+	{
+		#PAIN
+		pos=match(rom,/[AEOaeiouü]+/,mtc)
+		if (RLENGTH==1){
+			sub(substr(rom,pos,1),pytable[substr(rom,pos,1)][tone],rom)
+		}
+		else{
+			t=mtc[0];
+			if(match(t,/[ae]/,mtc)){
+				sub(substr(t,RSTART,1), pytable[substr(t,RSTART,1)][tone],rom)
+			}
+	else if(match(t,/[oO]u/,mtc)){
+				o=substr(mtc[0],1,1)
+				sub(o, pytable[o][tone],rom)
+			}
+			else {
+				sub(substr(t,length(t),1), pytable[substr(t,length(t),1)][tone],rom)
+			}
+
+			
+		}
+	return  rom;
+
+	}
+	function pytone(py)
+	{
+		split(py,syls," ")
+		a=""
+		for (s in syls){
+			pysyl=syls[s]
+			l=length(pysyl)
+			tone=substr(pysyl,l,1)
+			rom=substr(pysyl,0,l-1)
+			a=a" "tmark(rom,tone)
+		}
+	return a" ";
+
+	}
+BEGIN{
+	split("ā á ǎ à a",pyta)
+	split("ē é ě è e",pyte)
+	split("ī í ǐ ì i",pyti)
+	split("ō ó ǒ ò o",pyto)
+	split("ū ú ǔ ù u",pytu)
+	split("ǖ ǘ ǚ ǜ ü",pytv)
+
+	split("Ā Á Ǎ À A",pytA)
+	split("Ē É Ě È E",pytE)
+	split("Ō Ó Ǒ Ò O",pytO)
+
+
+	for (i = 1; i <= 5; i++){
+		pytable["a"][i]=pyta[i]
+		pytable["e"][i]=pyte[i]
+		pytable["i"][i]=pyti[i]
+		pytable["o"][i]=pyto[i]
+		pytable["u"][i]=pytu[i]
+		pytable["ü"][i]=pytv[i]
+		pytable["A"][i]=pytA[i]
+		pytable["E"][i]=pytE[i]
+		pytable["O"][i]=pytO[i]
+	}
+
+}
+  	{ chars=length($2);
+	split($0,pinyin,/[\[\]]/)
+	foo=$0
+	sub(/^[^\/]*/,"",foo)
+	sub(/u:/,"ü",pinyin[2])
+	print "<span font=\"" charsize  "px\"> " $2 "</span>" \
+		"<span font=\"" pysize  "px\"> [" pytone(pinyin[2])"]</span>"
+	print "<span font=\"italic " pysize  "px\"> " foo "</span>"
+}' 
+}
+
+
+cedict="$HOME/.local/share/cedict/cedict.txt" #this should be a  properly de memed version of cedict dictionary, sorted by simplified row
+
+sel="$(xsel -o)"
+
+zh="$(echo "$sel" | grep -o '[一-龥]' | tr -d '\n')"
+
+[ -n "$zh" ]  || exit 
+
+#get first line with matching first char
+
+dunstify -i "none" -r 1000 "nühair"  "$(searchres)"
+
+searchres
