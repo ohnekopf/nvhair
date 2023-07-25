@@ -92,4 +92,5 @@ zh="$(echo "$sel" | grep -o '[一-龥]' | tr -d '\n')"
 
 dunstify -i "none" -r 1000 "nühair"  "$(searchres)"
 
-searchres
+# uncomment to debug i guess
+#searchres 
