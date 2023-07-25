@@ -2,7 +2,7 @@
 
 searchres(){
 nv.awk -v sstr="$zh" "$cedict" | \
-	awk -v charsize=20 -v pysize=12 '
+	awk -v charsize=20 -v pysize=16 -v meansize=12 '
 	function tmark(rom,tone)
 	{
 		#PAIN
@@ -61,7 +61,7 @@ BEGIN{
 		pytable["i"][i]=pyti[i]
 		pytable["o"][i]=pyto[i]
 		pytable["u"][i]=pytu[i]
-		pytable["ü"][i]=pytv[i]
+		pytable["ü"][i]=pytv[i]
 		pytable["A"][i]=pytA[i]
 		pytable["E"][i]=pytE[i]
 		pytable["O"][i]=pytO[i]
@@ -75,7 +75,7 @@ BEGIN{
 	sub(/u:/,"ü",pinyin[2])
 	print "<span font=\"" charsize  "px\"> " $2 "</span>" \
 		"<span font=\"" pysize  "px\"> [" pytone(pinyin[2])"]</span>"
-	print "<span font=\"italic " pysize  "px\"> " foo "</span>"
+	print "<span font=\"italic " meansize  "px\"> " foo "</span>"
 }' 
 }
 
