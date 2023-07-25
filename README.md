@@ -6,6 +6,9 @@ This couple of scripts use dunst and xsel and the [CEDICT](https://cc-cedict.org
 provide definitions of mandarin chinese characters. 
 Currently at a very basic but functional state. Inspired by the [Zhongwen](https://github.com/cschiller/zhongwen) browser extension.
 Supports simplified chinese, although it can be set to recognize traditional characters with a little bit of tweaking.
+
+This program has the advantage of working outside and inside of the browser, so for example on a pdf reader or anywhere where 
+mandarin text can be selected with the mouse.
 ## Requirements
 * [dunst](https://github.com/dunst-project/dunst) notifications daemon with `dunstify`.
   
